@@ -1,17 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
-    <link rel="stylesheet" href="home2.css">
+    <link rel="stylesheet" href="admin-dash.css">
     <link rel="stylesheet" href="nav.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
+
 <body>
 
     <div id="navbar">
-        <a href="home.html" class="active">Home</a>
+        <a href="admin-dash.html" class="active">Home</a>
         <a href="add.html">Add student</a>
         <a href="search.html">Search student</a>
         <a href="attend.html">Attendance</a>
@@ -46,7 +48,7 @@
         <div class="recent-activity">
             <h3>Recent Activity</h3>
             <ul id="activitylist">
-                </ul>
+            </ul>
         </div>
 
         <div class="recent-activity">
@@ -57,14 +59,15 @@
                 <button id="postNoticeBtn">Post Notice</button>
             </div>
             <ul id="noticeList">
-                </ul>
+            </ul>
         </div>
     </div>
 
     <script type="module" src="firebase.js"></script>
-    <script type="module" src="home.js"></script>
+    <script type="module" src="admin-dash.js"></script>
     <script type="module" src="nav.js"></script>
     <script type="module" src="common.js"></script>
 
 </body>
+
 </html>

@@ -3,120 +3,125 @@
 * {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;  
+    box-sizing: border-box;
     font-family: 'Poppins', sans-serif;
 }
 
-body{
-     background: rgb(255, 255, 255);
-    
+body {
+    background: rgb(255, 255, 255);
+
 }
-#container{
+
+#container {
     display: flex;
     justify-content: center;
-    align-items:center;
+    align-items: center;
     margin-top: 100px;
-    border:none;
+    border: none;
     height: 200px;
 }
 
-#message{
-    background:white;
-    border:none;
-    box-shadow:0px 0px 10px #5a2d82;
-    height:170px;
-    width:700px;
+#message {
+    background: white;
+    border: none;
+    box-shadow: 0px 0px 10px #5a2d82;
+    height: 170px;
+    width: 700px;
     border-radius: 20px;
     transition: ease-in 0.2s;
-    
-}
-#message:hover{
-        scale: 1.1;
 
 }
-#title{
+
+#message:hover {
+    scale: 1.1;
+
+}
+
+#title {
 
     font-size: 25px;
     font-weight: bold;
     margin-top: 30px;
     margin-left: 40px;
-  
+
 }
 
-#sub{
-    
+#sub {
+
     font-size: 15px;
     font-weight: bold;
-    margin-left:40px; ;
+    margin-left: 40px;
+    ;
 }
 
-.cards{
-    
+.cards {
+
     display: flex;
-    align-items:center;
-    gap:40px;
+    align-items: center;
+    gap: 40px;
     text-align: center;
     margin-top: 100px;
-    
+
 
 }
- .card{
-     background-color:white;
-     height: 120px;
-     width:420px;
-     border-radius: 15px;
-     text-align:center;
-     border:none;
-     box-shadow:0px 0px 10px #e0e0e0;  
-     
-     
+
+.card {
+    background-color: white;
+    height: 120px;
+    width: 420px;
+    border-radius: 15px;
+    text-align: center;
+    border: none;
+    box-shadow: 0px 0px 10px #e0e0e0;
+
+
 }
 
-p{
+p {
     font-size: 26px;
-    font-weight:bold;
+    font-weight: bold;
     margin-top: 10px;
 }
 
-.card:hover{
+.card:hover {
     transform: translateY(-10px);
     transition: 0.3s;
     cursor: pointer;
 }
 
-.recent-activity{
+.recent-activity {
     background: #ffffff;
-    width:320px;
-    margin:40px;
+    width: 320px;
+    margin: 40px;
     padding: 20px;
     border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0,0.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.recent-activity:hover{
-      scale: 1.05;
+.recent-activity:hover {
+    scale: 1.05;
 }
 
-.recent-activity h3{
+.recent-activity h3 {
     text-align: center;
     margin-bottom: 15px;
-    color:#5a2d82;
+    color: #5a2d82;
 }
 
-#activitylist{
-    list-style:none ;
+#activitylist {
+    list-style: none;
     padding: 0;
 }
 
-#activitylist li{
-    padding:8px;
-    font-size:14px;
-    border-bottom:1px solid #eee ;
+#activitylist li {
+    padding: 8px;
+    font-size: 14px;
+    border-bottom: 1px solid #eee;
 }
 
 
 .table-container {
-  overflow-x: auto; 
+    overflow-x: auto;
 }
 
 
@@ -125,7 +130,7 @@ p{
     justify-content: center;
     gap: 25px;
     padding: 30px;
-    flex-wrap: wrap; 
+    flex-wrap: wrap;
     align-items: flex-start;
 }
 
@@ -136,7 +141,7 @@ p{
     min-height: 300px;
     padding: 20px;
     border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
     transition: 0.3s;
 }
 
@@ -152,7 +157,7 @@ p{
 
 .notice-form {
     display: flex;
-    flex-direction: column; 
+    flex-direction: column;
     gap: 12px;
     margin-bottom: 20px;
     background: #fdfbff;
@@ -161,11 +166,11 @@ p{
     border: 1px solid #f0e6f7;
 }
 
-.notice-form input, 
+.notice-form input,
 .notice-form textarea {
     width: 100%;
     padding: 10px;
-    border: 1px solid #ddd; 
+    border: 1px solid #ddd;
     border-radius: 8px;
     font-family: 'Poppins', sans-serif;
     font-size: 14px;
@@ -173,7 +178,7 @@ p{
     transition: 0.3s;
 }
 
-.notice-form input:focus, 
+.notice-form input:focus,
 .notice-form textarea:focus {
     border-color: #5a2d82;
     box-shadow: 0 0 5px rgba(90, 45, 130, 0.1);
@@ -201,16 +206,18 @@ p{
 }
 
 
-#activitylist, #noticeList {
+#activitylist,
+#noticeList {
     list-style: none;
     padding: 0;
 }
 
-#activitylist li, #noticeList li {
+#activitylist li,
+#noticeList li {
     padding: 12px 10px;
-    border-bottom: 1px solid #f1f1f1; 
+    border-bottom: 1px solid #f1f1f1;
     display: flex;
-    flex-direction: column; 
+    flex-direction: column;
     gap: 4px;
 }
 
