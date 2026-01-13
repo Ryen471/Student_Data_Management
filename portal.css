@@ -4,22 +4,13 @@
     font-family: Georgia, 'Times New Roman', Times, serif;
     margin: 0px;
     padding: 0px;
-}
 
-/* body {
-    background-image: url(sppu.avif);
-    background-position: fixed;
-    background-repeat: no-repeat;
-    background-size: cover;
-    margin: 0px;
-    height: 100vh; 
 }
-*/
 
 h2 {
     height: 80px;
     text-align: center;
-    background-color: gray;
+    background: linear-gradient(45deg, rgb(238, 124, 143), rgba(223, 7, 223, 0.914));
     color: white;
     padding-top: 50px;
     border-radius: 10px;
@@ -46,19 +37,19 @@ h3 {
     width: 300px;
     border: 2px solid black;
     border-radius: 12px;
-    background-color: white;
+    background: linear-gradient(0deg, rgba(244, 10, 236, 0.944), rgb(238, 116, 155));
 }
 
 .role-card:hover {
     transform: translateY(-10px);
-    transition: 0.2s;
+    transition: 0.3s;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.758);
     cursor: pointer;
 
 }
 
 .role-card i {
-    color: #3498db;
+    color: black;
     font-size: 50px;
     margin-left: 140px;
     margin-top: 40px;

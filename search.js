@@ -1,73 +1,127 @@
 import { db } from "./firebase.js";
-import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+import {
+    collection,
+    getDocs,
+    doc,
+    updateDoc
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const studentTable = document.getElementById("studentTable");
+const searchInput = document.getElementById("searchInput");
+const modal = document.getElementById("viewModal");
+const content = document.getElementById("fullInfoContent");
+
+let allStudents = [];
 
 async function loadStudents() {
-    try {
-        const querySnapshot = await getDocs(collection(db, "students"));
-        studentTable.innerHTML = ""; 
+    const snap = await getDocs(collection(db, "students"));
+    allStudents = [];
 
-        querySnapshot.forEach((doc) => {
-            const student = doc.data();
-            const row = document.createElement("tr");
-            
-            row.innerHTML = `
-                <td>${student.rollNo || "N/A"}</td> 
-                <td>${student.fullName || "N/A"}</td>
-                <td>${student.department || "N/A"}</td>
-                <td>${student.studyYear || "N/A"}</td> 
-                <td>${student.mobile || "N/A"}</td>
-                <td>
-                    <button class="view-btn" data-id="${doc.id}">View</button>
-                    <button class="update-btn" data-id="${doc.id}" style="background-color: #ff9800; color: white; margin-left: 5px; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">Update</button>
-                </td>
-                <td style="display:none;">${student.countryStatus || ""}</td>
-            `;
-            studentTable.appendChild(row);
-        });
+    snap.forEach(d => {
+        allStudents.push({ id: d.id, ...d.data() });
+    });
 
-        attachListeners();
-    } catch (error) {
-        console.error("Error loading students: ", error);
-    }
+    renderTable(allStudents);
 }
 
-function attachListeners() {
-    document.querySelectorAll(".view-btn").forEach(btn => {
-        btn.onclick = (e) => window.location.href = `view.html?id=${e.target.dataset.id}`;
-    });
-    document.querySelectorAll(".update-btn").forEach(btn => {
-        btn.onclick = (e) => window.location.href = `add.html?id=${e.target.dataset.id}`;
+
+function renderTable(data) {
+    studentTable.innerHTML = "";
+
+    data.forEach(std => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+      <td>${std.studentId}</td>
+      <td>${std.name}</td>
+      <td>${std.department}</td>
+      <td>${std.year}</td>
+      <td>${std.mobile}</td>
+      <td>
+        <button onclick="viewStudent('${std.id}')">View</button>
+        <button onclick="editStudent('${std.id}')">Update</button>
+      </td>
+    `;
+        studentTable.appendChild(tr);
     });
 }
 
-function filterTable() {
-    const nameFilter = document.getElementById("searchInput").value.toUpperCase().trim();
-    const cityFilter = document.querySelector('select[name="city"]').value.toUpperCase().trim();
-    const classFilter = document.querySelector('select[name="class"]').value.toUpperCase().trim();
-    const deptFilter = document.querySelector('select[name="Department"]').value.toUpperCase().trim();
+window.filterTable = function () {
+    const text = searchInput.value.toLowerCase();
+    const city = document.querySelector('select[name="city"]').value;
+    const year = document.querySelector('select[name="class"]').value;
+    const dept = document.querySelector('select[name="Department"]').value;
 
-    const rows = studentTable.getElementsByTagName("tr");
+    const filtered = allStudents.filter(s => {
+        const searchMatch =
+            s.name.toLowerCase().includes(text) ||
+            s.studentId.toString().includes(text);
 
-    for (let row of rows) {
-        const nameText = row.cells[1].textContent.toUpperCase().trim();
-        const deptText = row.cells[2].textContent.toUpperCase().trim();
-        const classText = row.cells[3].textContent.toUpperCase().trim();
-        const cityText = row.cells[6].textContent.toUpperCase().trim(); 
+        const cityMatch = city ? s.residency === city : true;
+        const yearMatch = year ? s.year === year : true;
+        const deptMatch = dept ? s.department === dept : true;
 
-        const matchesName = nameFilter === "" || nameText.includes(nameFilter);
-        const matchesCity = cityFilter === "" || cityText === cityFilter;
-        const matchesClass = classFilter === "" || classText === classFilter;
-        const matchesDept = deptFilter === "" || deptText === deptFilter;
+        return searchMatch && cityMatch && yearMatch && deptMatch;
+    });
 
-        if (matchesName && matchesCity && matchesClass && matchesDept) {
-            row.style.display = "";
-        } else {
-            row.style.display = "none";
-        }
-    }
-}
+    renderTable(filtered);
+};
 
-window.filterTable = filterTable;
+window.viewStudent = function (id) {
+    const s = allStudents.find(x => x.id === id);
+
+    content.innerHTML = `
+    <h3>${s.name}</h3>
+    <p><b>ID:</b> ${s.studentId}</p>
+    <p><b>Email:</b> ${s.email}</p>
+    <p><b>Mobile:</b> ${s.mobile}</p>
+    <p><b>Department:</b> ${s.department}</p>
+    <p><b>Year:</b> ${s.year}</p>
+    <p><b>City:</b> ${s.residency}</p>
+    <button onclick="closeModal()">Close</button>
+  `;
+    modal.style.display = "block";
+};
+
+window.editStudent = function (id) {
+    const s = allStudents.find(x => x.id === id);
+
+    content.innerHTML = `
+    <h3>Update Student</h3>
+
+    <input id="uName" value="${s.name}">
+    <input id="uMobile" value="${s.mobile}">
+    <input id="uDept" value="${s.department}">
+    <input id="uYear" value="${s.year}">
+    <input id="uCity" value="${s.residency}">
+
+    <br><br>
+    <button onclick="saveUpdate('${id}')">Save</button>
+    <button onclick="closeModal()">Cancel</button>
+  `;
+    modal.style.display = "block";
+};
+
+
+window.saveUpdate = async function (id) {
+    const ref = doc(db, "students", id);
+
+    await updateDoc(ref, {
+        name: document.getElementById("uName").value,
+        mobile: document.getElementById("uMobile").value,
+        department: document.getElementById("uDept").value,
+        year: document.getElementById("uYear").value,
+        residency: document.getElementById("uCity").value
+    });
+
+    alert("Student updated");
+    closeModal();
+    loadStudents();
+};
+
+
+window.closeModal = function () {
+    modal.style.display = "none";
+};
+
+
 loadStudents();

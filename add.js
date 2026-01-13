@@ -1,104 +1,119 @@
-import { db } from "./firebase.js";
-import { doc, getDoc, updateDoc, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+import { auth, db } from "./firebase.js";
+import {
+    collection,
+    addDoc,
+    serverTimestamp,
+    doc,
+    getDoc
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-const urlParams = new URLSearchParams(window.location.search);
-const studentId = urlParams.get('id');
-const studentForm = document.getElementById("studentForm");
-const submitBtn = document.getElementById("submitBtn");
+import {
+    onAuthStateChanged,
+    signOut
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
+onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+        alert("Please login first");
+        window.location.href = "adminlog.html";
+        return;
+    }
 
-if (studentId) {
-    (async () => {
-        const docRef = doc(db, "students", studentId);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-            const data = docSnap.data();
-            document.getElementById("std-name").value = data.fullName || "";
-            document.getElementById("father-ipt-id").value = data.fatherName || "";
-            document.getElementById("mother-ipt-id").value = data.motherName || "";
-            document.getElementById("std-email-id").value = data.email || "";
-            document.getElementById("mobile-id").value = data.mobile || "";
-            document.getElementById("dob-id").value = data.dob || "";
-
-            if (data.gender === "Male") document.getElementById("male-id").checked = true;
-            if (data.gender === "Female") document.getElementById("female-id").checked = true;
-
-            document.getElementById("aadhar-id").value = data.aadhar || "";
-            document.getElementById("blood-group").value = data.bloodGroup || "";
-            document.getElementById("admission-date").value = data.admissionDate || "";
-            document.getElementById("emergency-id").value = data.emergency || "";
-            document.getElementById("country-status").value = data.countryStatus || "Indian";
-            document.getElementById("std-address").value = data.address || "";
-            document.getElementById("state-id").value = data.state || "";
-            document.getElementById("district-id").value = data.district || "";
-            document.getElementById("taluka-id").value = data.taluka || "";
-            document.getElementById("city-id").value = data.city || "";
-            document.getElementById("pincode-id").value = data.pincode || "";
-            document.getElementById("ssc-marks").value = data.sscMarks || "";
-            document.getElementById("hsc-marks").value = data.hscMarks || "";
-            document.getElementById("degree-level").value = data.degreeLevel || "";
-            document.getElementById("dept-id").value = data.department || "";
-            document.getElementById("course-id").value = data.course || "";
-            document.getElementById("year-id").value = data.studyYear || "";
-
-            if (submitBtn) submitBtn.innerText = "Update Details";
-        }
-    })();
-}
+    const snap = await getDoc(doc(db, "users", user.uid));
+    if (!snap.exists() || snap.data().role !== "admin") {
+        alert("Access denied");
+        window.location.href = "student-dashboard.html";
+    }
+});
 
 
-studentForm.addEventListener("submit", async (e) => {
+document.getElementById("logoutBtn").addEventListener("click", async () => {
+    await signOut(auth);
+    window.location.href = "adminlog.html";
+});
+
+
+const form = document.getElementById("studentForm");
+
+form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const genderInput = document.querySelector('input[name="gender"]:checked');
+
+    const name = document.getElementById("std-name").value.trim();
+    const email = document.getElementById("std-email-id").value.trim();
+    const mobile = document.getElementById("mobile-id").value.trim();
+    const dob = document.getElementById("dob-id").value;
+    const admissionDate = document.getElementById("admission-date").value;
+    const address = document.getElementById("std-address").value.trim();
+    const dept = document.getElementById("dept-id").value;
+    const course = document.getElementById("course-id").value;
+    const year = document.getElementById("year-id").value;
+    const gender = document.querySelector('input[name="gender"]:checked')?.value;
+
+
+    if (!name) return alert("Student name is required");
+    if (!email || !email.includes("@")) return alert("Enter valid email");
+    if (mobile.length !== 10) return alert("Mobile number must be 10 digits");
+    if (!gender) return alert("Select gender");
+    if (!dob) return alert("Date of birth is required");
+    if (!admissionDate) return alert("Admission date is required");
+    if (!address) return alert("Address is required");
+    if (dept === "Select") return alert("Select department");
+    if (course === "Select") return alert("Select course");
+    if (year === "Select") return alert("Select study year");
+
+
+    const aadhar = document.getElementById("aadhar-id").value.trim();
+    if (aadhar && aadhar.length !== 12)
+        return alert("Aadhar must be 12 digits");
+
+    const emergency = document.getElementById("emergency-id").value.trim();
+    if (emergency && emergency.length !== 10)
+        return alert("Emergency contact must be 10 digits");
+
+    const pincode = document.getElementById("pincode-id").value.trim();
+    if (pincode && pincode.length !== 6)
+        return alert("Pincode must be 6 digits");
+
 
     const studentData = {
-        fullName: document.getElementById("std-name").value,
+        name,
         fatherName: document.getElementById("father-ipt-id").value,
         motherName: document.getElementById("mother-ipt-id").value,
-        email: document.getElementById("std-email-id").value,
-        mobile: document.getElementById("mobile-id").value,
-        dob: document.getElementById("dob-id").value,
-        gender: genderInput ? genderInput.value : "N/A",
-        aadhar: document.getElementById("aadhar-id").value,
+        email,
+        mobile,
+        dob,
+        gender,
+        aadhar,
         bloodGroup: document.getElementById("blood-group").value,
-        admissionDate: document.getElementById("admission-date").value,
-        emergency: document.getElementById("emergency-id").value,
-        countryStatus: document.getElementById("country-status").value,
-        address: document.getElementById("std-address").value,
+        admissionDate,
+        emergency,
+
+        residency: document.getElementById("country-status").value,
+        address,
         state: document.getElementById("state-id").value,
         district: document.getElementById("district-id").value,
         taluka: document.getElementById("taluka-id").value,
         city: document.getElementById("city-id").value,
-        pincode: document.getElementById("pincode-id").value,
-        sscMarks: document.getElementById("ssc-marks").value,
-        hscMarks: document.getElementById("hsc-marks").value,
+        pincode,
+
+        ssc: document.getElementById("ssc-marks").value,
+        hsc: document.getElementById("hsc-marks").value,
         degreeLevel: document.getElementById("degree-level").value,
-        department: document.getElementById("dept-id").value,
-        course: document.getElementById("course-id").value,
-        studyYear: document.getElementById("year-id").value
+        department: dept,
+        course,
+        year,
+
+        createdAt: serverTimestamp()
     };
 
+
     try {
-        if (studentId) {
-
-            await updateDoc(doc(db, "students", studentId), studentData);
-            alert("Record Updated Successfully!");
-        } else {
-
-            const snapshot = await getDocs(collection(db, "students"));
-
-
-            const nextRollNo = snapshot.size + 1;
-
-            studentData.rollNo = nextRollNo;
-
-            await addDoc(collection(db, "students"), studentData);
-            alert("Student Added! Allotted Roll No: " + nextRollNo);
-        }
-        window.location.href = "search.html";
+        await addDoc(collection(db, "students"), studentData);
+        alert("Student added successfully ");
+        form.reset();
     } catch (err) {
-        console.error("Error:", err);
-        alert("Error saving record: " + err.message);
+        alert("Failed to save student ");
+        console.error(err);
     }
 });
