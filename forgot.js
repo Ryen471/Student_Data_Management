@@ -1,23 +1,22 @@
 import { auth } from "./firebase.js";
-import { sendPasswordResetEmail } 
-from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { sendPasswordResetEmail }
+  from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-const btn = document.getElementById("button");
 
-btn.addEventListener("click", () => {
-  const email = document.querySelector('input[name="Email"]').value;
+document.getElementById("button").addEventListener("click", async () => {
+  const email = document.getElementById("email").value;
 
-  if (email === "") {
-    alert("Please enter email");
+  if (!email) {
+    alert("Please enter your email address.");
     return;
   }
 
-  sendPasswordResetEmail(auth, email)
-    .then(() => {
-      alert("Password reset link sent to your email");
-      window.location.href = "project.html";
-    })
-    .catch((error) => {
-      alert(error.message);
-    });
+  try {
+    await sendPasswordResetEmail(auth, email);
+    alert("Password reset link sent! Check your email inbox.");
+
+    window.location.href = "studentlog.html";
+  } catch (error) {
+    alert("Error sending reset email: " + error.message);
+  }
 });

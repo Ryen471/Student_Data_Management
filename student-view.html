@@ -4,16 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Student Dashboard</title>
     <link rel="stylesheet" href="view.css">
 </head>
 
 <body>
     <div class="profile-container">
         <div class="profile-left">
-            <button class="back-btn" onclick="window.location.href='search.html'">
-                <i class="fa-solid fa-arrow-left"></i> Back
-            </button>
+
+            <button class="back-btn" onclick="window.location.href='studenthome.html'"> Back </button>
 
             <h2 class="page-title">Student Details</h2>
             <p id="name" class="student-name">Student Name: </p>
@@ -51,21 +50,10 @@
                 <p>Pincode: <span id="pincode"></span></p>
             </div>
         </div>
-
-        <div class="profile-right">
-            <div class="photo-circle">Student photo</div>
-
-            <div class="action-buttons">
-                <button class="print-btn" onclick="window.print()">Print</button>
-                <button class="excel-btn" id="exportBtn">Export Excel</button>
-                <button class="delete-btn" id="deleteBtn"
-                    style="background-color: #ff4d4d; color: white; padding: 10px; border-radius: 5px; border: none; cursor: pointer;">
-                    Delete Student
-                </button>
-            </div>
-        </div>
     </div>
-    <script type="module" src="view.js"></script>
+
+    <script type="module" src="firebase.js"></script>
+    <script type="module" src="studenthome.js"></script>
 </body>
 
 </html>
