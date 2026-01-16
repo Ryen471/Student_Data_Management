@@ -11,7 +11,7 @@ if (logoutBtn) {
     signOut(auth)
       .then(() => {
         alert("Logged out successfully!");
-        window.location.href = "index.html";
+        window.location.href = "portal.html";
       })
       .catch((error) => {
         console.error("Logout Error:", error);

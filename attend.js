@@ -1,89 +1,80 @@
+import { db } from "./firebase.js";
+import {
+    collection,
+    addDoc,
+    getDocs
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-import { db } from "./firebase.js"; 
+const table = document.getElementById("attendanceTable");
+const subjectDropdown = document.getElementById("subject-dropdown");
+const dateInput = document.getElementById("search-date");
+
+let students = [];
 
 
-import { 
-    collection, 
-    getDocs, 
-    addDoc, 
-    serverTimestamp 
-} from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+async function loadStudents() {
+    const snap = await getDocs(collection(db, "students"));
+    students = [];
 
-const attendanceTable = document.getElementById("attendanceTable");
+    snap.forEach(d => {
+        students.push(d.data());
+    });
 
-
-async function fetchStudents() {
-    try {
-        if (!db) {
-            throw new Error("Firestore instance (db) not found! Check firebase.js");
-        }
-
-       
-        const colRef = collection(db, "students"); 
-        const querySnapshot = await getDocs(colRef);
-        
-        attendanceTable.innerHTML = ""; 
-
-        if (querySnapshot.empty) {
-            attendanceTable.innerHTML = "<tr><td colspan='3'>No students found in database.</td></tr>";
-            return;
-        }
-
-        querySnapshot.forEach((doc) => {
-            const student = doc.data();
-            const row = document.createElement("tr");
-            row.innerHTML = `
-                <td>${student.rollNo || "N/A"}</td>
-                <td>${student.fullName || student.name || "Unknown"}</td>
-                <td>
-                    <select class="status-select">
-                        <option value="Present">Present</option>
-                        <option value="Absent">Absent</option>
-                    </select>
-                </td>
-            `;
-            attendanceTable.appendChild(row);
-        });
-    } catch (error) {
-        console.error("Detailed Error:", error);
-        alert("Error fetching students: " + error.message);
-    }
+    students.sort((a, b) => a.studentId - b.studentId);
+    renderTable();
 }
 
 
-fetchStudents();
+function renderTable() {
+    table.innerHTML = "";
+
+    students.forEach(s => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+      <td>${s.studentId}</td>
+      <td>${s.name}</td>
+      <td>
+        <label>
+          <input type="radio" 
+                 name="att_${s.studentId}" 
+                 value="P" checked> Present
+        </label>
+        &nbsp;&nbsp;
+        <label>
+          <input type="radio" 
+                 name="att_${s.studentId}" 
+                 value="A"> Absent
+        </label>
+      </td>
+    `;
+        table.appendChild(tr);
+    });
+}
 
 
 window.saveAttendance = async function () {
-    const subject = document.getElementById("subject-dropdown").value;
-    const rows = attendanceTable.querySelectorAll("tr");
+    const date = dateInput.value;
+    if (!date) return alert("Select date");
+    if (!subjectDropdown.value) return alert("Select subject");
 
-    if (!subject) {
-        alert("Please select a subject!");
-        return;
+    const subject =
+        subjectDropdown.options[subjectDropdown.selectedIndex].text;
+
+    for (let s of students) {
+        const status = document.querySelector(
+            `input[name="att_${s.studentId}"]:checked`
+        ).value;
+
+        await addDoc(collection(db, "attendance"), {
+            studentId: s.studentId,
+            name: s.name,
+            subject,
+            date,
+            status
+        });
     }
 
-    try {
-        const date = new Date().toLocaleDateString('en-GB'); 
-
-        for (let row of rows) {
-            const rollNo = row.cells[0].innerText;
-            const name = row.cells[1].innerText;
-            const status = row.querySelector(".status-select").value;
-
-          
-            await addDoc(collection(db, "AttendanceRecords"), {
-                subject: subject,
-                rollNo: rollNo,
-                studentName: name,
-                status: status,
-                date: date,
-                timestamp: serverTimestamp()
-            });
-        }
-        alert("Attendance submitted successfully for " + subject);
-    } catch (error) {
-        console.error("Save Error:", error);
-        alert("Failed to save attendance: " + error.message);
-    }
+    alert("Attendance saved successfully");
 };
+
+loadStudents();

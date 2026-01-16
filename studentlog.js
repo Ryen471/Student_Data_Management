@@ -1,8 +1,14 @@
 import { auth, db } from "./firebase.js";
-import { signInWithEmailAndPassword }
-    from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { doc, getDoc }
-    from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import {
+    signInWithEmailAndPassword,
+    onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+import {
+    doc,
+    getDoc
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
 
 
 window.addEventListener("DOMContentLoaded", () => {
@@ -17,12 +23,16 @@ window.addEventListener("DOMContentLoaded", () => {
 document.getElementById("loginForm").addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
     const rememberMe = document.getElementById("RememberMe").checked;
 
-    try {
+    if (!email || !password) {
+        alert("Please enter email and password");
+        return;
+    }
 
+    try {
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
 
@@ -33,20 +43,38 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
             localStorage.removeItem("studentEmail");
         }
 
+        const userRef = doc(db, "users", user.uid);
+        const userSnap = await getDoc(userRef);
 
-        const userDoc = await getDoc(doc(db, "users", user.uid));
-        if (userDoc.exists()) {
-            const role = userDoc.data().role;
-            if (role === "student") {
-
-                window.location.href = "studenthome.html";
-            } else {
-                alert("This account is not a student!");
-            }
-        } else {
-            alert("No role found for this user in Firestore!");
+        if (!userSnap.exists()) {
+            alert("User data not found in database");
+            return;
         }
+
+        const userData = userSnap.data();
+
+        if (userData.role === "student") {
+
+            sessionStorage.setItem("studentLoggedIn", "true");
+            sessionStorage.setItem("studentName", userData.name || "Student");
+
+            window.location.href = "std-dash.html";
+        } else {
+            alert("This account is not a student");
+        }
+
     } catch (error) {
         alert("Login failed: " + error.message);
+    }
+});
+
+
+
+
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        console.log("User logged in:", user.email);
+    } else {
+        console.log("No user logged in");
     }
 });
