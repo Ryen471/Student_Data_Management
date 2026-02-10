@@ -9,7 +9,7 @@ import {
     serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-/* ---------------- ACTIVITY LOG ---------------- */
+
 async function addActivity(text) {
     await addDoc(collection(db, "activities"), {
         text,
@@ -17,7 +17,7 @@ async function addActivity(text) {
     });
 }
 
-/* ---------------- BASIC SETUP ---------------- */
+
 const form = document.getElementById("studentForm");
 const achievementBox = document.getElementById("AcheivementsSection");
 const photoInput = document.getElementById("photo-id");
@@ -25,12 +25,12 @@ const photoInput = document.getElementById("photo-id");
 const editData = localStorage.getItem("editStudent");
 let editDocId = null;
 
-/* ---------------- EDIT MODE (UPDATE) ---------------- */
+
 if (editData) {
     const s = JSON.parse(editData);
     editDocId = s.docId;
 
-    // show achievements only in update
+
     if (achievementBox) achievementBox.style.display = "block";
 
     document.getElementById("std-name").value = s.name || "";
@@ -62,26 +62,26 @@ if (editData) {
     if (s.gender === "Male") document.getElementById("male-id").checked = true;
     if (s.gender === "Female") document.getElementById("female-id").checked = true;
 
-    // ✅ Achievements textarea **empty by default**
+
     document.getElementById("achievementInput-id").value = "";
 
     document.getElementById("submitBtn").innerText = "Update Student";
 } else {
-    // ADD MODE → achievements hidden
+
     if (achievementBox) achievementBox.style.display = "none";
 }
 
-/* ---------------- STUDENT ID ---------------- */
+
 async function getNextStudentId() {
     const snap = await getDocs(collection(db, "students"));
     return snap.size + 1;
 }
 
-/* ---------------- SUBMIT ---------------- */
+
 form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    /* ----- REQUIRED (*) VALIDATION ----- */
+
     const requiredIds = [
         "std-name", "father-ipt-id", "mother-ipt-id", "std-email-id",
         "mobile-id", "dob-id", "emergency-id", "country-status",
@@ -97,41 +97,38 @@ form.addEventListener("submit", async (e) => {
         }
     }
 
-    /* ----- PHOTO VALIDATION ----- */
+
     if (!editDocId && (!photoInput || photoInput.files.length === 0)) {
         alert("Student photo is mandatory");
         return;
     }
 
-    /* ----- GENDER ----- */
     const gender = document.querySelector('input[name="gender"]:checked')?.value;
     if (!gender) {
         alert("Please select gender");
         return;
     }
 
-    /* ----- EMAIL ----- */
+
     const email = document.getElementById("std-email-id").value.trim();
     if (!/^\S+@\S+\.\S+$/.test(email)) {
         alert("Invalid email format");
         return;
     }
 
-    /* ----- MOBILE ----- */
+
     const mobile = document.getElementById("mobile-id").value.trim();
     if (!/^\d{10}$/.test(mobile)) {
         alert("Mobile number must be 10 digits");
         return;
     }
-
-    /* ----- AADHAR ----- */
     const aadhar = document.getElementById("aadhar-id").value.trim();
     if (aadhar && !/^\d{12}$/.test(aadhar)) {
         alert("Aadhar must be 12 digits");
         return;
     }
 
-    /* ----- FINAL DATA ----- */
+
     const studentData = {
         name: document.getElementById("std-name").value.trim(),
         father: document.getElementById("father-ipt-id").value.trim(),
@@ -169,7 +166,7 @@ form.addEventListener("submit", async (e) => {
             let achievements = [];
             if (achText) achievements = achText.split(",").map(a => a.trim());
 
-            // combine old + new achievements
+
             studentData.achievements = [...existingAchievements.filter(a => a), ...achievements];
 
             await updateDoc(ref, studentData);
