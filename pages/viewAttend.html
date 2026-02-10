@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Ledger</title>
+    <link rel="stylesheet" href="/css/nav.css">
+    <link rel="stylesheet" href="/css/viewAttend.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="/css/responsive.css">
+</head>
+
+<body>
+
+    <div id="navbar">
+        <a href="admin-dash.html">Home</a>
+        <a href="add.html">Add student</a>
+        <a href="search.html">Search student</a>
+        <a href="attend.html">Attendance</a>
+        <a href="viewAttend.html" class="active">Reports</a>
+        <a href="admin-complaints.html">Complaint Box</a>
+    </div>
+    <button id="logoutBtn" data-firebase>LOGOUT
+        <i class="fa-solid fa-right-from-bracket"></i>
+    </button>
+
+    <div id="container">
+        <h2>STUDENT ATTENDANCE LEDGER</h2>
+
+        <div class="filter-box">
+            <div class="input-group">
+                <label>Select Month:</label>
+                <input type="Month" id="search-Month">
+                <label>Class</label>
+
+                <select id="Class-dropdown">
+                    <option value="">-- Choose Class --</option>
+                    <option>F.Y</option>
+                    <option>S.Y</option>
+                    <option>T.Y</option>
+                    <option>Masters</option>
+                </select>
+
+                <label>Department</label>
+                <select id="Department-dropdown">
+                    <option value="">-- Choose Department --</option>
+                    <option value="Computer science">Computer science</option>
+                    <option value="Arts and Commerce">Arts and Commerce</option>
+                    <option value="Science">Science</option>
+                </select>
+            </div>
+            <button class="view-btn" onclick="getLedgerReport()">View Ledger</button>
+            <button class="clear-btn" onclick="getresetinput()">Clear</button>
+        </div>
+
+        <div class="table-container">
+            <table id="ledgerTable">
+                <thead>
+                    <tr>
+                        <th>Student ID</th>
+                        <th>Student Name</th>
+                        <th>Days Present</th>
+                        <th>Days Absent</th>
+                        <th>Remaining Days</th>
+                        <th>Average</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script type="module" src="/JS/firebase.js"></script>
+    <script type="module" src="/JS/viewAttend.js"></script>
+    <script type="module" src="/JS/nav.js"></script>
+</body>
+
+</html>
