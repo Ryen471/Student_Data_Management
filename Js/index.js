@@ -1,7 +1,8 @@
 document.getElementById("admin").addEventListener("click", function () {
-    window.location.href = "adminlog.html";
+    window.location.href = "/pages/adminlog.html";
 });
 
 document.getElementById("student").addEventListener("click", function () {
-    window.location.href = "studentlog.html";
+    window.location.href = "/pages/studentlog.html";
 });
+
