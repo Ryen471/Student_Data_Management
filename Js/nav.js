@@ -11,10 +11,11 @@ if (logoutBtn) {
     signOut(auth)
       .then(() => {
         alert("Logged out successfully!");
-        window.location.href = "portal.html";
+        window.location.href = "index.html";
       })
       .catch((error) => {
         console.error("Logout Error:", error);
       });
   });
 }
+
