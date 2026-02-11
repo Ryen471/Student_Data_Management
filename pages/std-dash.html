@@ -14,8 +14,12 @@
 <body>
     <div class="main-container">
 
+
         <div class="header">
-            <button id="logoutBtn">LOGOUT <i class="fa-solid fa-right-from-bracket"></i></button>
+            <button id="logoutBtn"> LOGOUT <i class="fa-solid fa-right-from-bracket"></i></button>
+        </div>
+        <div class="title">
+            <h1 class="title1"> Student Dashboard</h1>
         </div>
 
         <div class="username">
@@ -25,22 +29,30 @@
         <div id="small-conatainer">
 
             <div class="box" id="notice">
-                <p>
-                    <a href="javascript:void(0)">Notice</a>
-                    <span id="notice-indicator" style="display:none; color:red; font-size:18px;">●</span>
+                <p><i class="fa-solid fa-bullhorn" id="notice-icon"></i>
+                    <a href="javascript:void(0)">Recent Notices</a>
+                <p class="notice-paragraph"> Stay updated with latest notifications</p>
+                <span id="notice-indicator" style="display:none; color:blue;font-size:18px;">●</span>
                 </p>
 
-                <div id="notice-text" style="font-size:12px; margin-top:4px;">
+                <div id="notice-text" style="font: size 14px;px; margin-top:4px;color:blue;">
                     No notice available
                 </div>
             </div>
 
             <div class="box" id="std-profile">
-                <p><a href="student-view.html">Profile</a></p>
+                <p><i class="fa-duotone fa-solid fa-circle-user" id="user-icon"></i><a href="student-view.html">View
+                        Profile</a>
+                <p> View your personal , acedemic information</p>
+                </p>
             </div>
 
             <div class="box" id="complaint-box">
-                <p><a href="complaint.html">Complaint</a></p>
+                <p><i class="fa-regular fa-note-sticky" id="complaint-icon"></i><a href="complaint.html">Logde a
+                        Complaint</a>
+                <p> Encountering isssues?File a request or complaint to adminstrator</p>
+
+                </p>
             </div>
 
         </div>

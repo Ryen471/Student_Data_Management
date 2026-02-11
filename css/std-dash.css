@@ -11,19 +11,59 @@ body {
     height: 600px;
     width: 1400px;
     margin-top: 20px;
-    box-shadow: 0px 0px 5px gray;
+    box-shadow: 0px 0px 10px purple;
     border-radius: 15px;
     background: white;
+
 }
 
 
 .header {
-    background: purple;
+    background: none;
     height: 45px;
     width: 100%;
+    border: none;
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
 }
+
+.title {
+    position: relative;
+    right: -40px;
+    top: 30px;
+    color: gray;
+    transition: ease-in-out 0.2s;
+}
+
+.title:hover {
+    color: purple;
+}
+
+#notice-icon {
+    font-size: 20px;
+    background-color: rgb(246, 182, 246);
+    border-radius: 10px;
+    padding: 5px;
+    color: purple;
+}
+
+#user-icon {
+    font-size: 20px;
+    background-color: rgb(198, 200, 249);
+    border-radius: 10px;
+    padding: 5px;
+    color: blue;
+}
+
+#complaint-icon {
+    font-size: 20px;
+    background-color: rgb(246, 182, 198);
+    border-radius: 10px;
+    padding: 5px;
+    color: red;
+}
+
+
 
 
 .username {
@@ -32,8 +72,8 @@ body {
     position: relative;
     border: none;
     left: 150px;
-    top: 5%;
-    color: rgb(187, 99, 113);
+    top: 10%;
+    color: purple;
     display: flex;
     align-items: center;
     padding-left: 20px;
@@ -71,7 +111,8 @@ body {
 
 #notice p {
     margin: 0;
-    font-size: 18px;
+    font-size: 15px;
+    color: gray;
 }
 
 
@@ -97,7 +138,7 @@ body {
 .footer {
     height: 25px;
     width: 100%;
-    background: purple;
+    background: blue;
     border-bottom-left-radius: 15px;
     border-bottom-right-radius: 15px;
     position: relative;
@@ -181,6 +222,16 @@ a {
     overflow-y: auto;
 }
 
+#notice-indicator {
+    display: none;
+    color: blue;
+    font-size: 30px;
+    position: relative;
+    top: -100px;
+    left: 110px;
+
+}
+
 
 
 .box p {
@@ -210,7 +261,7 @@ a {
 
 .header,
 .footer {
-    background: #e40bc8;
+    background: purple;
 
 }
 
