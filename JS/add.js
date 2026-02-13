@@ -152,7 +152,6 @@ form.addEventListener("submit", async (e) => {
         year: document.getElementById("year-id").value
     };
 
-    /* ================= PHOTO INJECTION START ================= */
 
     if (photoInput && photoInput.files.length > 0) {
         const file = photoInput.files[0];
@@ -165,7 +164,6 @@ form.addEventListener("submit", async (e) => {
         studentData.photo = base64;
     }
 
-    /* ================= PHOTO INJECTION END ================= */
 
     try {
         if (editDocId) {
