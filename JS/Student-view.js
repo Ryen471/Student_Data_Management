@@ -1,15 +1,11 @@
-
 import { auth, db } from "./firebase.js";
-import { onAuthStateChanged } from
-    "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import {
     collection,
     query,
     where,
     getDocs
-} from
-    "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const nameEl = document.getElementById("name");
 const rollEl = document.getElementById("roll");
@@ -33,11 +29,12 @@ const stateEl = document.getElementById("state");
 const talukaEl = document.getElementById("taluka");
 const pincodeEl = document.getElementById("pincode");
 
+const studentPhotoEl = document.getElementById("studentPhoto");
 
 onAuthStateChanged(auth, async (user) => {
     if (!user) {
         alert("Student not logged in");
-        window.location.href = "index.html";
+        window.location.href = "/index.html";
         return;
     }
 
@@ -59,10 +56,8 @@ async function loadStudentData(email) {
 
     const s = snap.docs[0].data();
 
-
     nameEl.innerText = `Student Name: ${s.name || ""}`;
     rollEl.innerText = s.studentId || "";
-
 
     dobEl.innerText = s.dob || "";
     genderEl.innerText = s.gender || "";
@@ -75,14 +70,20 @@ async function loadStudentData(email) {
     deptEl.innerText = s.department || "";
     classEl.innerText = `${s.year || ""} (${s.degree || ""})`;
 
-
     mobileEl.innerText = s.mobile || "";
     emergencyEl.innerText = s.emergency || "";
     emailEl.innerText = s.email || "";
-
 
     cityEl.innerText = s.city || "";
     stateEl.innerText = s.state || "";
     talukaEl.innerText = s.taluka || "";
     pincodeEl.innerText = s.pincode || "";
+
+
+    if (s.photo) {
+        studentPhotoEl.src = s.photo;
+    } else {
+        o
+        studentPhotoEl.src = "/image/default-student.png";
+    }
 }
