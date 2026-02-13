@@ -9,14 +9,12 @@ import {
     serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-
 async function addActivity(text) {
     await addDoc(collection(db, "activities"), {
         text,
         time: serverTimestamp()
     });
 }
-
 
 const form = document.getElementById("studentForm");
 const achievementBox = document.getElementById("AcheivementsSection");
@@ -25,11 +23,9 @@ const photoInput = document.getElementById("photo-id");
 const editData = localStorage.getItem("editStudent");
 let editDocId = null;
 
-
 if (editData) {
     const s = JSON.parse(editData);
     editDocId = s.docId;
-
 
     if (achievementBox) achievementBox.style.display = "block";
 
@@ -62,25 +58,28 @@ if (editData) {
     if (s.gender === "Male") document.getElementById("male-id").checked = true;
     if (s.gender === "Female") document.getElementById("female-id").checked = true;
 
-
     document.getElementById("achievementInput-id").value = "";
 
     document.getElementById("submitBtn").innerText = "Update Student";
-} else {
 
+} else {
     if (achievementBox) achievementBox.style.display = "none";
 }
 
-
 async function getNextStudentId() {
     const snap = await getDocs(collection(db, "students"));
-    return snap.size + 1;
+    let maxId = 0;
+    snap.forEach(doc => {
+        const data = doc.data();
+        if (data.studentId && data.studentId > maxId) {
+            maxId = data.studentId;
+        }
+    });
+    return maxId + 1;
 }
-
 
 form.addEventListener("submit", async (e) => {
     e.preventDefault();
-
 
     const requiredIds = [
         "std-name", "father-ipt-id", "mother-ipt-id", "std-email-id",
@@ -97,7 +96,6 @@ form.addEventListener("submit", async (e) => {
         }
     }
 
-
     if (!editDocId && (!photoInput || photoInput.files.length === 0)) {
         alert("Student photo is mandatory");
         return;
@@ -109,25 +107,23 @@ form.addEventListener("submit", async (e) => {
         return;
     }
 
-
     const email = document.getElementById("std-email-id").value.trim();
     if (!/^\S+@\S+\.\S+$/.test(email)) {
         alert("Invalid email format");
         return;
     }
 
-
     const mobile = document.getElementById("mobile-id").value.trim();
     if (!/^\d{10}$/.test(mobile)) {
         alert("Mobile number must be 10 digits");
         return;
     }
+
     const aadhar = document.getElementById("aadhar-id").value.trim();
     if (aadhar && !/^\d{12}$/.test(aadhar)) {
         alert("Aadhar must be 12 digits");
         return;
     }
-
 
     const studentData = {
         name: document.getElementById("std-name").value.trim(),
@@ -156,6 +152,21 @@ form.addEventListener("submit", async (e) => {
         year: document.getElementById("year-id").value
     };
 
+    /* ================= PHOTO INJECTION START ================= */
+
+    if (photoInput && photoInput.files.length > 0) {
+        const file = photoInput.files[0];
+        const base64 = await new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
+        studentData.photo = base64;
+    }
+
+    /* ================= PHOTO INJECTION END ================= */
+
     try {
         if (editDocId) {
             const ref = doc(db, "students", editDocId);
@@ -165,7 +176,6 @@ form.addEventListener("submit", async (e) => {
             const achText = document.getElementById("achievementInput-id").value.trim();
             let achievements = [];
             if (achText) achievements = achText.split(",").map(a => a.trim());
-
 
             studentData.achievements = [...existingAchievements.filter(a => a), ...achievements];
 
@@ -184,4 +194,5 @@ form.addEventListener("submit", async (e) => {
     } catch (err) {
         alert(err.message);
     }
+
 });

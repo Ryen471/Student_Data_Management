@@ -5,11 +5,11 @@
     padding: 0;
     box-sizing: border-box;
     font-family: 'Poppins', sans-serif;
+
 }
 
 body {
-    background: rgb(255, 255, 255);
-
+    background: linear-gradient(60deg, rgb(229, 226, 249), rgb(254, 247, 255));
 }
 
 #container {
@@ -19,18 +19,22 @@ body {
     margin-top: 100px;
     border: none;
     height: 200px;
+
+
 }
 
 #message {
     background: white;
     border: none;
-    box-shadow: 0px 0px 10px #5a2d82;
+    box-shadow: 0px 0px 10px rgb(205, 204, 204);
     height: 170px;
     width: 700px;
     border-radius: 20px;
     transition: ease-in 0.2s;
 
 }
+
+
 
 #message:hover {
     scale: 1.1;
@@ -46,12 +50,48 @@ body {
 
 }
 
+#std-icon {
+    font-size: 25px;
+    background: rgb(209, 209, 252);
+    color: blue;
+    border-radius: 5px;
+    padding: 5px;
+    border: none;
+
+
+}
+
+#department-icon {
+    font-size: 25px;
+    background: rgb(255, 245, 179);
+    padding: 5px;
+    width: 40px;
+    border-radius: 5px;
+    border: none;
+    color: orange;
+}
+
+#courses-icon {
+    font-size: 25px;
+    background: rgb(244, 182, 244);
+    padding: 5px;
+    width: 40px;
+    border-radius: 5px;
+    border: none;
+    color: purple
+}
+
+#secure-icon {
+    font-size: 50px;
+}
+
+
 #sub {
 
     font-size: 15px;
     font-weight: bold;
     margin-left: 40px;
-    ;
+    color: gray;
 }
 
 .cards {
@@ -68,12 +108,14 @@ body {
 
 .card {
     background-color: white;
-    height: 120px;
+    height: 150px;
     width: 420px;
     border-radius: 15px;
     text-align: center;
     border: none;
-    box-shadow: 0px 0px 10px #e0e0e0;
+    box-shadow: 0px 0px 10px rgb(174, 172, 172);
+    justify-content: center;
+    align-content: center;
 
 
 }
@@ -160,7 +202,6 @@ p {
     display: flex;
     flex-direction: column;
     gap: 12px;
-    margin-bottom: 20px;
     background: #fdfbff;
     padding: 15px;
     border-radius: 10px;
@@ -186,7 +227,7 @@ p {
 }
 
 .notice-form textarea {
-    height: 70px;
+    /* height: 20px; */
     resize: none;
 }
 
@@ -253,14 +294,16 @@ p {
 .delete-notice {
     padding: 4px 10px;
     font-size: 12px;
-    background-color: #e74c3c;
+    background-color: orange;
     color: #fff;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     margin-top: 5px;
+    transition: ease-in 0.2s;
 }
 
 .delete-notice:hover {
-    background-color: #c0392b;
+    background-color: rgb(224, 152, 19);
+    transform: translateY(-2px);
 }

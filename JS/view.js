@@ -30,6 +30,7 @@ const talukaEl = document.getElementById("taluka");
 const pincodeEl = document.getElementById("pincode");
 
 const achievementsEl = document.getElementById("view-achievements");
+const photoEl = document.getElementById("studentPhoto"); // photo element added
 
 const deleteBtn = document.getElementById("deleteBtn");
 
@@ -52,6 +53,13 @@ async function loadStudent() {
         }
 
         const s = snap.data();
+
+        // ------------ PHOTO DISPLAY ------------
+        if (s.photo) {
+            photoEl.src = s.photo;
+        } else {
+            photoEl.src = "/images/default-photo.png"; // optional default photo
+        }
 
         nameEl.innerText = `Student Name: ${s.name || ""}`;
         rollEl.innerText = s.studentId || "";

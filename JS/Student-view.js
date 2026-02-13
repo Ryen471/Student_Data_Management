@@ -1,3 +1,4 @@
+
 import { auth, db } from "./firebase.js";
 import { onAuthStateChanged } from
     "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
@@ -36,7 +37,7 @@ const pincodeEl = document.getElementById("pincode");
 onAuthStateChanged(auth, async (user) => {
     if (!user) {
         alert("Student not logged in");
-        window.location.href = "portal.html";
+        window.location.href = "index.html";
         return;
     }
 

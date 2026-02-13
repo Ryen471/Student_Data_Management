@@ -15,7 +15,7 @@ let lastSeenNoticeTime = localStorage.getItem("lastSeenNoticeTime");
 
 onAuthStateChanged(auth, (user) => {
     if (!user) {
-        window.location.href = "portal.html";
+        window.location.href = "index.html";
         return;
     }
 

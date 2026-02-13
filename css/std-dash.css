@@ -142,7 +142,7 @@ body {
     border-bottom-left-radius: 15px;
     border-bottom-right-radius: 15px;
     position: relative;
-    top: -10px;
+    top: -50px;
     color: white;
     display: flex;
     align-items: center;
@@ -297,6 +297,7 @@ a {
 
 .username h1 {
     font-weight: 600;
+    color: purple;
 }
 
 @keyframes popup {

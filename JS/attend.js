@@ -122,9 +122,14 @@ export async function getAverageAttendance(studentId, year, department, monthYea
 
     let total = 0;
     let present = 0;
+
     snap.forEach(doc => {
+        const data = doc.data();
+        const day = new Date(data.date).getDay();
+        if (day === 0) return;
+
         total++;
-        if (doc.data().status === "P") present++;
+        if (data.status === "P") present++;
     });
 
     if (total === 0) return 0;

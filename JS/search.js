@@ -24,7 +24,7 @@ async function loadStudents() {
 function renderTable(data) {
     studentTable.innerHTML = "";
 
-    data.forEach((s, index) => {
+    data.forEach((s) => {
         const tr = document.createElement("tr");
         tr.innerHTML = `
             <td>${s.studentId}</td>
@@ -42,20 +42,16 @@ function renderTable(data) {
 }
 
 window.filterTable = function () {
-
     const text = searchInput.value.toLowerCase();
-
     const city = document.querySelector('select[name="city"]')?.value || "";
     const cls = document.querySelector('select[name="class"]')?.value || "";
     const dept = document.querySelector('select[name="Department"]')?.value || "";
 
     const filtered = allStudents.filter(s => {
-
         const matchText =
             text === "" ||
             s.name.toLowerCase().includes(text) ||
             s.studentId.toString().includes(text);
-
 
         const cityMap = {
             "Maharashtra": "Indian",
@@ -63,16 +59,9 @@ window.filterTable = function () {
             "International": "NRI"
         };
 
-        const matchCity =
-            city === "" ||
-            (s.residency && s.residency === cityMap[city]);
-        const matchClass =
-            cls === "" ||
-            (s.year && s.year === cls);
-
-        const matchDept =
-            dept === "" ||
-            (s.department && s.department.toLowerCase() === dept.toLowerCase());
+        const matchCity = city === "" || (s.residency && s.residency === cityMap[city]);
+        const matchClass = cls === "" || (s.year && s.year === cls);
+        const matchDept = dept === "" || (s.department && s.department.toLowerCase() === dept.toLowerCase());
 
         return matchText && matchCity && matchClass && matchDept;
     });
@@ -81,7 +70,9 @@ window.filterTable = function () {
 };
 
 window.viewStudent = function (id) {
+    const s = allStudents.find(x => x.docId === id);
     localStorage.setItem("viewStudentId", id);
+    localStorage.setItem("viewStudentPhoto", s.photo || "");
     window.location.href = "view.html";
 };
 
