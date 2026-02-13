@@ -11,7 +11,7 @@ body {
 }
 
 .profile-container {
-    max-width: 1000px;
+    max-width: 70%;
     margin: 40px auto;
     background: white;
     padding: 30px;
@@ -24,6 +24,23 @@ body {
 
 .profile-left {
     flex: 3;
+}
+
+.profile-right {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+}
+
+.student-photo {
+    width: 120px;
+    height: 120px;
+    margin-left: 700px;
+    border: 2px solid black;
+    margin-top: -60px;
+    margin-bottom: -40px;
+
 }
 
 .back-btn {
