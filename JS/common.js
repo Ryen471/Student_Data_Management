@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (logoutBtn && !logoutBtn.hasAttribute("data-firebase")) {
         logoutBtn.addEventListener("click", () => {
-            window.location.href = "index.html";
+            window.location.href = "/index.html";
         });
     }
 });
