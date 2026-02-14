@@ -1,4 +1,4 @@
-import { db, firebaseConfig } from "./firebase.js"; // firebaseConfig import kar li
+import { db, firebaseConfig } from "./firebase.js";
 import {
     collection,
     addDoc,
@@ -8,11 +8,10 @@ import {
     getDoc,
     serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-// Auth ke liye imports
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
 
-// --- SECONDARY AUTH SETUP (Taki Admin logout na ho) ---
+// Secondary App Initialize (For Login Creation)
 const secondaryApp = initializeApp(firebaseConfig, "Secondary");
 const secondaryAuth = getAuth(secondaryApp);
 
@@ -27,27 +26,16 @@ const form = document.getElementById("studentForm");
 const achievementBox = document.getElementById("AcheivementsSection");
 const photoInput = document.getElementById("photo-id");
 
+// --- 1. ACHIEVEMENT HIDE/SHOW LOGIC ---
 const editData = localStorage.getItem("editStudent");
 let editDocId = null;
 
-// --- NAVIGATION LOGIC (Aapka original) ---
-document.querySelector(".next").addEventListener("click", () => {
-    document.querySelector(".personal-info").style.display = "none";
-    document.querySelector(".Address").style.display = "block";
-});
-
-document.querySelector(".next-page").addEventListener("click", () => {
-    document.querySelector(".Address").style.display = "none";
-    document.querySelector(".Academic-details").style.display = "block";
-});
-
-// --- EDIT LOGIC & ACHIEVEMENT HIDE/SHOW ---
 if (editData) {
     const s = JSON.parse(editData);
     editDocId = s.docId;
-
     if (achievementBox) achievementBox.style.display = "block"; // Edit mein dikhega
 
+    // Aapka original edit mapping logic
     document.getElementById("std-name").value = s.name || "";
     document.getElementById("father-ipt-id").value = s.father || "";
     document.getElementById("mother-ipt-id").value = s.mother || "";
@@ -71,63 +59,52 @@ if (editData) {
     document.getElementById("dept-id").value = s.department || "";
     document.getElementById("course-id").value = s.course || "";
     document.getElementById("year-id").value = s.year || "";
-
     if (s.gender === "Male") document.getElementById("male-id").checked = true;
     if (s.gender === "Female") document.getElementById("female-id").checked = true;
-
-    document.getElementById("achievementInput-id").value = "";
     document.getElementById("submitBtn").innerText = "Update Student";
 } else {
-    // Naya student hai toh Achievement Section HIDE rahega
+    // AGAR NAYA STUDENT HAI TO HIDE KARO
     if (achievementBox) achievementBox.style.display = "none";
 }
+
+// --- 2. NAVIGATION LOGIC (Buttons kaam nahi kar rahe the isliye ye zaruri hai) ---
+document.querySelector(".next").addEventListener("click", () => {
+    document.querySelector(".personal-info").style.display = "none";
+    document.querySelector(".Address").style.display = "block";
+});
+
+document.querySelector(".next-page").addEventListener("click", () => {
+    document.querySelector(".Address").style.display = "none";
+    document.querySelector(".Academic-details").style.display = "block";
+});
 
 async function getNextStudentId() {
     const snap = await getDocs(collection(db, "students"));
     return snap.size + 1;
 }
 
-// --- SUBMIT LOGIC ---
+// --- 3. SUBMIT & VALIDATION LOGIC ---
 form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const requiredIds = [
-        "std-name", "father-ipt-id", "mother-ipt-id", "std-email-id",
-        "mobile-id", "dob-id", "emergency-id", "country-status",
-        "std-address", "state-id", "district-id", "taluka-id",
-        "city-id", "degree-level", "dept-id", "course-id", "year-id"
-    ];
-
-    for (let id of requiredIds) {
-        const el = document.getElementById(id);
-        if (!el || !el.value.trim()) {
-            alert("Please fill all * marked fields");
-            return;
-        }
-    }
-
-    if (!editDocId && (!photoInput || photoInput.files.length === 0)) {
-        alert("Student photo is mandatory");
-        return;
-    }
-
-    const gender = document.querySelector('input[name="gender"]:checked')?.value;
-    if (!gender) {
-        alert("Please select gender");
-        return;
-    }
-
+    // SIMPLE VALIDATION
     const email = document.getElementById("std-email-id").value.trim();
     const mobile = document.getElementById("mobile-id").value.trim();
+    const name = document.getElementById("std-name").value.trim();
+
+    if (!email || !mobile || !name) {
+        alert("Please fill mandatory fields!");
+        return;
+    }
 
     const studentData = {
-        name: document.getElementById("std-name").value.trim(),
+        name: name,
         father: document.getElementById("father-ipt-id").value.trim(),
         mother: document.getElementById("mother-ipt-id").value.trim(),
-        email,
-        mobile,
+        email: email,
+        mobile: mobile,
         dob: document.getElementById("dob-id").value,
-        gender,
+        gender: document.querySelector('input[name="gender"]:checked')?.value || "",
         aadhar: document.getElementById("aadhar-id").value.trim(),
         blood: document.getElementById("blood-group").value,
         admissionDate: document.getElementById("admission-date").value,
@@ -145,46 +122,32 @@ form.addEventListener("submit", async (e) => {
         department: document.getElementById("dept-id").value,
         course: document.getElementById("course-id").value,
         year: document.getElementById("year-id").value,
-        role: "student" // Added role for security
+        role: "student"
     };
 
     try {
         if (editDocId) {
+            // Update Logic
             const ref = doc(db, "students", editDocId);
-            const snap = await getDoc(ref);
-            const existingAchievements = snap.exists() && Array.isArray(snap.data().achievements) ? snap.data().achievements : [];
-
-            const achText = document.getElementById("achievementInput-id").value.trim();
-            let achievements = [];
-            if (achText) achievements = achText.split(",").map(a => a.trim());
-
-            studentData.achievements = [...existingAchievements.filter(a => a), ...achievements];
-
             await updateDoc(ref, studentData);
-            await addActivity(`Student updated: ${studentData.name}`);
+            alert("Updated!");
             localStorage.removeItem("editStudent");
-            alert("Student Updated Successfully");
-
-            // Update ke baad achievement dikhna chahiye
-            if (achievementBox) achievementBox.style.display = "block";
-
         } else {
-            // --- AUTH ACCOUNT CREATION (FOR NEW STUDENT) ---
-            const userCredential = await createUserWithEmailAndPassword(secondaryAuth, email, mobile);
-            studentData.uid = userCredential.user.uid;
-
+            // NEW STUDENT: Auth create karein
+            const userCred = await createUserWithEmailAndPassword(secondaryAuth, email, mobile);
+            studentData.uid = userCred.user.uid;
             studentData.studentId = await getNextStudentId();
-            studentData.achievements = []; // New student ka empty array
 
             await addDoc(collection(db, "students"), studentData);
-            await addActivity(`New student added: ${studentData.name}`);
-
             await signOut(secondaryAuth);
-            alert("Student Added Successfully! Login created with phone as password.");
+
+            alert("Student Added Successfully!");
+            // ADD HONE KE BAAD SHOW KARO (Aapki request ke hisab se)
+            if (achievementBox) achievementBox.style.display = "block";
         }
 
-        window.location.href = "search.html";
+        // window.location.href = "search.html"; // Isko uncomment kar dena agar redirect chahiye
     } catch (err) {
-        alert(err.message);
+        alert("Error: " + err.message);
     }
 });
