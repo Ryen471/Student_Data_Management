@@ -1,4 +1,5 @@
-import { db } from "./firebase.js";
+// add.js
+import { db, functions } from "./firebase.js";
 import {
     collection,
     addDoc,
@@ -8,7 +9,9 @@ import {
     getDoc,
     serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { httpsCallable } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-functions.js";
 
+// Function to add activity logs
 async function addActivity(text) {
     await addDoc(collection(db, "activities"), {
         text,
@@ -17,63 +20,14 @@ async function addActivity(text) {
 }
 
 const form = document.getElementById("studentForm");
-const achievementBox = document.getElementById("AcheivementsSection");
 const photoInput = document.getElementById("photo-id");
-
-const editData = localStorage.getItem("editStudent");
-let editDocId = null;
-
-if (editData) {
-    const s = JSON.parse(editData);
-    editDocId = s.docId;
-
-    if (achievementBox) achievementBox.style.display = "block";
-
-    document.getElementById("std-name").value = s.name || "";
-    document.getElementById("father-ipt-id").value = s.father || "";
-    document.getElementById("mother-ipt-id").value = s.mother || "";
-    document.getElementById("std-email-id").value = s.email || "";
-    document.getElementById("mobile-id").value = s.mobile || "";
-    document.getElementById("dob-id").value = s.dob || "";
-    document.getElementById("aadhar-id").value = s.aadhar || "";
-    document.getElementById("blood-group").value = s.blood || "";
-    document.getElementById("admission-date").value = s.admissionDate || "";
-    document.getElementById("emergency-id").value = s.emergency || "";
-
-    document.getElementById("country-status").value = s.residency || "";
-    document.getElementById("std-address").value = s.address || "";
-    document.getElementById("state-id").value = s.state || "";
-    document.getElementById("district-id").value = s.district || "";
-    document.getElementById("taluka-id").value = s.taluka || "";
-    document.getElementById("city-id").value = s.city || "";
-    document.getElementById("pincode-id").value = s.pincode || "";
-
-    document.getElementById("ssc-marks").value = s.ssc || "";
-    document.getElementById("hsc-marks").value = s.hsc || "";
-    document.getElementById("degree-level").value = s.degree || "";
-    document.getElementById("dept-id").value = s.department || "";
-    document.getElementById("course-id").value = s.course || "";
-    document.getElementById("year-id").value = s.year || "";
-
-    if (s.gender === "Male") document.getElementById("male-id").checked = true;
-    if (s.gender === "Female") document.getElementById("female-id").checked = true;
-
-    document.getElementById("achievementInput-id").value = "";
-
-    document.getElementById("submitBtn").innerText = "Update Student";
-
-} else {
-    if (achievementBox) achievementBox.style.display = "none";
-}
 
 async function getNextStudentId() {
     const snap = await getDocs(collection(db, "students"));
     let maxId = 0;
     snap.forEach(doc => {
         const data = doc.data();
-        if (data.studentId && data.studentId > maxId) {
-            maxId = data.studentId;
-        }
+        if (data.studentId && data.studentId > maxId) maxId = data.studentId;
     });
     return maxId + 1;
 }
@@ -81,6 +35,7 @@ async function getNextStudentId() {
 form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
+    // Basic validations
     const requiredIds = [
         "std-name", "father-ipt-id", "mother-ipt-id", "std-email-id",
         "mobile-id", "dob-id", "emergency-id", "country-status",
@@ -96,7 +51,7 @@ form.addEventListener("submit", async (e) => {
         }
     }
 
-    if (!editDocId && (!photoInput || photoInput.files.length === 0)) {
+    if (!photoInput || photoInput.files.length === 0) {
         alert("Student photo is mandatory");
         return;
     }
@@ -125,6 +80,7 @@ form.addEventListener("submit", async (e) => {
         return;
     }
 
+    // Collect student data
     const studentData = {
         name: document.getElementById("std-name").value.trim(),
         father: document.getElementById("father-ipt-id").value.trim(),
@@ -152,8 +108,8 @@ form.addEventListener("submit", async (e) => {
         year: document.getElementById("year-id").value
     };
 
-
-    if (photoInput && photoInput.files.length > 0) {
+    // Convert photo to Base64
+    if (photoInput.files.length > 0) {
         const file = photoInput.files[0];
         const base64 = await new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -164,33 +120,20 @@ form.addEventListener("submit", async (e) => {
         studentData.photo = base64;
     }
 
-
     try {
-        if (editDocId) {
-            const ref = doc(db, "students", editDocId);
-            const snap = await getDoc(ref);
-            const existingAchievements = snap.exists() && Array.isArray(snap.data().achievements) ? snap.data().achievements : [];
+        // Add student to Firestore
+        studentData.studentId = await getNextStudentId();
+        await addDoc(collection(db, "students"), studentData);
 
-            const achText = document.getElementById("achievementInput-id").value.trim();
-            let achievements = [];
-            if (achText) achievements = achText.split(",").map(a => a.trim());
+        // Call Cloud Function to create Firebase Auth user
+        const createStudentUser = httpsCallable(functions, 'createStudentUser');
+        const password = "123456"; // Default password for new student
+        await createStudentUser({ email, password });
 
-            studentData.achievements = [...existingAchievements.filter(a => a), ...achievements];
-
-            await updateDoc(ref, studentData);
-            await addActivity(`Student updated: ${studentData.name}`);
-            localStorage.removeItem("editStudent");
-            alert("Student Updated Successfully");
-        } else {
-            studentData.studentId = await getNextStudentId();
-            await addDoc(collection(db, "students"), studentData);
-            await addActivity(`New student added: ${studentData.name}`);
-            alert("Student Added Successfully");
-        }
-
-        window.location.href = "search.html";
+        await addActivity(`New student added: ${studentData.name}`);
+        alert(`Student Added Successfully! Default password: ${password}`);
+        form.reset();
     } catch (err) {
         alert(err.message);
     }
-
 });
