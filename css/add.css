@@ -87,12 +87,12 @@ select {
 .next,
 .next-page,
 .submit-btn {
-    background: rgb(243, 166, 243);
+    background: rgb(185, 245, 185);
     border: none;
-    color:purple;
+    color: green;
     font-weight: bold;
     border-radius: 4px;
-    padding: 12px 25px; 
+    padding: 12px 25px;
     cursor: pointer;
     margin-top: 20px;
     transition: 0.3s;
@@ -100,14 +100,14 @@ select {
 }
 
 .submit-btn {
-    background: rgb(201, 114, 201);
+    background: rgb(185, 245, 185);
 }
 
 .next:hover,
 .next-page:hover,
 .submit-btn:hover {
 
-    background: rgb(201, 114, 201);
+    background: rgb(123, 236, 123);
 }
 
 .personal-info::after,
