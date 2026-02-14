@@ -50,10 +50,10 @@ a {
     position: fixed;
     top: 12px;
     right: 60px;
-    height: 4%;
-    background-color: white;
-    border: 1px solid red;
-    border-radius: 25px;
+    height: 5%;
+    background-color:rgb(245, 242, 242);
+    border-radius: 5px;
+    border:none;
     padding: 8px 18px;
     font-size: 12px;
     cursor: pointer;
@@ -63,8 +63,8 @@ a {
 }
 
 #logoutBtn:hover {
-    background-color: rgb(255, 0, 0);
-    color: white;
+    background-color: rgb(253, 189, 189);
+    color:red;
 }
 
 
