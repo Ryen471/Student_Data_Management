@@ -79,11 +79,16 @@ async function loadStudentData(email) {
     talukaEl.innerText = s.taluka || "";
     pincodeEl.innerText = s.pincode || "";
 
-
     if (s.photo) {
         studentPhotoEl.src = s.photo;
     } else {
         o
         studentPhotoEl.src = "/image/default-student.png";
+    }
+
+    if (Array.isArray(s.achievements) && s.achievements.length > 0) {
+        achievementsEl.innerHTML = `<strong>Achievements:</strong><ul>${s.achievements.map(a => `<li>${a}</li>`).join("")}</ul>`;
+    } else {
+        achievementsEl.innerHTML = `<strong>Achievements:</strong> None`;
     }
 }
