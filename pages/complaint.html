@@ -7,11 +7,12 @@
     <title>Complaint Box</title>
     <link rel="stylesheet" href="/css/complaint.css">
     <link rel="stylesheet" href="/css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 </head>
 
 <body>
-    <h1>Complaint Box</h1>
+    <h1>Submit a Complaint</h1>
 
     <form class="complaint-form" id="complaintForm">
         <div class="box-1">
@@ -52,7 +53,8 @@
             <textarea id="student-complaint" cols="80" rows="10" placeholder="Write your complaint here..."
                 required></textarea>
 
-            <button type="submit" id="submit">Submit</button>
+           
+                <button type="submit" id="submit"><i class="fa-solid fa-paper-plane" id="plane"></i>  Submit Complaint</button>
         </div>
     </form>
     <script type="module" src="/jS/firebase.js"></script>

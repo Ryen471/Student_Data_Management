@@ -1,22 +1,23 @@
 body {
     font-family: 'Poppins', sans-serif;
-    background: azure;
+    background:linear-gradient(60deg, rgb(229, 226, 249), rgb(254, 247, 255));
     color: #333;
     padding: 20px;
+   
 }
-
 h1 {
     text-align: center;
-    color: #007BFF;
 }
+
+
 
 .complaint-form {
     max-width: 700px;
     margin: auto;
-    background: linear-gradient(50deg, #fcdcfe, #add8ea);
+    background: white;
     padding: 25px;
-    border-radius: 10px;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 15px;
+    box-shadow: 0 6px 10px rgb(255, 200, 255);
 }
 
 label {
@@ -45,28 +46,39 @@ textarea {
     resize: none;
 }
 
+#plane{
+    margin:5px;
+}
 button {
     margin-top: 20px;
-    background: linear-gradient(90deg, #007BFF, #00C6FF);
-    color: white;
+    background:rgb(195, 195, 252);
+    color:blue;
     border: none;
     padding: 12px 20px;
     border-radius: 6px;
     cursor: pointer;
-    font-weight: 600;
+    font-weight: normal;
 }
 
 .back-btn {
-    background: #555;
-    color: white;
+    background:rgb(255, 213, 213);
+    color: rgb(192, 0, 0);
+    font-weight: normal;
     margin-bottom: 20px;
     padding: 8px 15px;
-    border-radius: 4px;
+    border-radius: 10px;
     cursor: pointer;
-    border: none;
+    width:80px;
+    border:none;
 
 }
+input:hover{
+border:1px solid blue;
+}
 
+textarea:hover{
+    border:1px solid blue;
+}
 button:hover {
     opacity: 0.9;
 }
