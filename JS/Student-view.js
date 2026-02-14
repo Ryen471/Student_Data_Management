@@ -28,6 +28,7 @@ const cityEl = document.getElementById("city");
 const stateEl = document.getElementById("state");
 const talukaEl = document.getElementById("taluka");
 const pincodeEl = document.getElementById("pincode");
+const achievementsEl = document.getElementById("view-achievements");
 
 const studentPhotoEl = document.getElementById("studentPhoto");
 

@@ -84,7 +84,7 @@ async function loadStudent() {
         talukaEl.innerText = s.taluka || "";
         pincodeEl.innerText = s.pincode || "";
 
-        // -------- ACHIEVEMENTS --------
+
         if (Array.isArray(s.achievements) && s.achievements.length > 0) {
             achievementsEl.innerHTML = `<strong>Achievements:</strong><ul>${s.achievements.map(a => `<li>${a}</li>`).join("")}</ul>`;
         } else {
