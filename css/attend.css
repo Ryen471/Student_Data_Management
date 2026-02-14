@@ -9,15 +9,15 @@ body {
     /* align-items: center; */
     /* justify-content: center; */
     /* display: flex; */
-    background: #e0edf2;
+    background:linear-gradient(60deg, rgb(229, 226, 249), rgb(254, 247, 255));
     margin: 0;
     min-height: 100vh;
 }
 
 #container {
     border: none;
-    box-shadow: 0px 0px 10px gray;
-    border-radius: 10px;
+    box-shadow: 0px 0px 7px rgb(243, 213, 252);
+    border-radius: 15px;
     width: 80%;
     margin-left: 150px;
     min-height: 700px;
